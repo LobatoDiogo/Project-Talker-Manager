@@ -12,8 +12,8 @@ app.get('/', (_req, res) => {
   res.status(HTTP_OK_STATUS).json({ message: 'Welcome talker manager' });
 });
 
-app.use('/', talkerRouter);
-app.use('/', loginRouter);
+app.use('/talker', talkerRouter);
+app.use('/login', loginRouter);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

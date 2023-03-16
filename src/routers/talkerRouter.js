@@ -64,7 +64,7 @@ const updateTalker = async (req, res) => {
   }
 };
 
-const validations = [
+const validators = [
   isValidToken,
   isValidName,
   isValidAge,
@@ -76,7 +76,7 @@ const validations = [
 talkerRouter
   .get('/', getTalkers)
   .get('/:id', getTalkerById)
-  .post('/', validations, postTalker)
-  .put('/:id', validations, updateTalker);
+  .post('/', ...validators, postTalker)
+  .put('/:id', ...validators, updateTalker);
 
 module.exports = talkerRouter;

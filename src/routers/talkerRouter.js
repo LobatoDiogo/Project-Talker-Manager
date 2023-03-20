@@ -13,6 +13,7 @@ const { writerJSON } = require('../utils/fsWrite');
 
 const talkerRouter = Router();
 const HTTP_OK_STATUS = 200;
+const NO_CONTENT_STATUS = 204;
 const talkerPath = path.join(__dirname, '../talker.json');
 
 const getTalkers = async (_req, res) => {
@@ -64,6 +65,20 @@ const updateTalker = async (req, res) => {
   }
 };
 
+const deleteTalker = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const talkers = await readerJSON(talkerPath);
+    const talkerDeleted = talkers.find((talk) => talk.id === Number(id));
+    const index = talkers.indexOf(talkerDeleted);
+    talkers.splice(index, 1);
+    await writerJSON(talkers);
+    return res.status(NO_CONTENT_STATUS).end();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const validators = [
   isValidToken,
   isValidName,
@@ -77,6 +92,7 @@ talkerRouter
   .get('/', getTalkers)
   .get('/:id', getTalkerById)
   .post('/', ...validators, postTalker)
-  .put('/:id', ...validators, updateTalker);
+  .put('/:id', ...validators, updateTalker)
+  .delete('/:id', isValidToken, deleteTalker);
 
 module.exports = talkerRouter;

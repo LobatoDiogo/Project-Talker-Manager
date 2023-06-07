@@ -79,6 +79,16 @@ const deleteTalker = async (req, res) => {
   }
 };
 
+const searchTalker = async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readerJSON(talkerPath);
+  const talkerName = talkers.filter((talk) => talk.name.includes(q));
+  
+  if (!talkers) return res.status(HTTP_OK_STATUS).json([]);
+
+  return res.status(HTTP_OK_STATUS).json(talkerName);
+};
+
 const validators = [
   isValidToken,
   isValidName,
@@ -89,6 +99,7 @@ const validators = [
 ];
 
 talkerRouter
+  .get('/search', isValidToken, searchTalker)
   .get('/', getTalkers)
   .get('/:id', getTalkerById)
   .post('/', ...validators, postTalker)
